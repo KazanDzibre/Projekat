@@ -1,29 +1,52 @@
 #include <iostream>
 #include <thread>
 #include <mutex>
+#include <conio.h>
+#include <stdlib.h>     //for using the function sleep
+#include <time.h>
+#include "windows.h" 
+
+
 
 using namespace std;
 
 mutex mtx;
+bool permission = false;
+bool permissionForMain = false;
+
+void interuptHandler() {
+	printf("javljanje iz callback-a");
+}
 
 void threadFunction() {
-	mtx.lock();
-	for (int i = 0; i < 10; i++) {
-		printf("Broj je %d\n", i);
+	while (true)
+	{
+		if (permission) {
+			interuptHandler();
+			permission = false;
+		}
 	}
-	mtx.unlock();
 }
 
 int main() {
 
 	thread t(threadFunction);
 
+	getch();
+	permission = true;
 
-	for (int i = 0; i < 10; i++) {
-		printf("gitproba\n");
+
+	getch();
+	permission = true;
+
+
+	while (1) {
+		Sleep(5000);
+		printf("main");
 	}
-
 	t.join();
+
+	printf("kraj");
 
 	return 0;
 }

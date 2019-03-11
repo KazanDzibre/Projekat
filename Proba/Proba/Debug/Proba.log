@@ -1,2 +1,6 @@
 ﻿  main.cpp
+c:\users\jovanovski\desktop\projekat_git\projekat\proba\proba\main.cpp(35): warning C4996: 'getch': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _getch. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\conio.h(452): note: see declaration of 'getch'
+c:\users\jovanovski\desktop\projekat_git\projekat\proba\proba\main.cpp(39): warning C4996: 'getch': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _getch. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\conio.h(452): note: see declaration of 'getch'
   Proba.vcxproj -> C:\Users\Jovanovski\Desktop\Projekat_git\Projekat\Proba\Debug\Proba.exe
