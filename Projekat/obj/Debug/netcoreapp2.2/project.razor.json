@@ -1,14 +1,6 @@
 {
-  "ProjectFilePath": "c:\\Users\\Marko\\Desktop\\Projekat\\Projekat.csproj",
+  "ProjectFilePath": "c:\\Users\\Marko\\Desktop\\GitFolder\\Projekat\\Projekat\\Projekat.csproj",
   "TargetFramework": "netcoreapp2.2",
   "TagHelpers": [],
-  "Configuration": {
-    "ConfigurationName": "UnsupportedRazor",
-    "LanguageVersion": "1.0",
-    "Extensions": [
-      {
-        "ExtensionName": "UnsupportedRazorExtension"
-      }
-    ]
-  }
+  "Configuration": null
 }

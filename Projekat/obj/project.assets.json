@@ -692,11 +692,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Marko\\Desktop\\Projekat\\Projekat.csproj",
+      "projectUniqueName": "C:\\Users\\Marko\\Desktop\\GitFolder\\Projekat\\Projekat\\Projekat.csproj",
       "projectName": "Projekat",
-      "projectPath": "C:\\Users\\Marko\\Desktop\\Projekat\\Projekat.csproj",
+      "projectPath": "C:\\Users\\Marko\\Desktop\\GitFolder\\Projekat\\Projekat\\Projekat.csproj",
       "packagesPath": "C:\\Users\\Marko\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Marko\\Desktop\\Projekat\\obj\\",
+      "outputPath": "C:\\Users\\Marko\\Desktop\\GitFolder\\Projekat\\Projekat\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
