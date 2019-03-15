@@ -20,7 +20,7 @@ namespace ConsoleApp1
         }
         static void Main(string[] args)
         {
-            using (var reader = new StreamReader("C:\\Users\\Marko\\Desktop\\VS2017Project\\ConsoleApp1\\input.txt")) //ovu putanju ce sredimo
+            using (var reader = new StreamReader("input.txt")) 
             using (var csv = new CsvReader(reader))
             {
                 //csv.Configuration.PrepareHeaderForMatch = (string header, int index) => header.ToLower();  //Ovo za slucaj da ne odgovara header opisu
