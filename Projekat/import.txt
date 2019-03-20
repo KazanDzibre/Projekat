@@ -1,2 +1,0 @@
-Ime,Adresa
-Adam,10520
