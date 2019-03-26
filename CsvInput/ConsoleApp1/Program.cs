@@ -1,5 +1,4 @@
 ﻿using CsvHelper;
-using CsvHelper.Configuration.Attributes;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -42,15 +41,9 @@ namespace ConsoleApp1
                 }
             }
         }
-        public class config
-        {
-            [Index(0)]
-            public string Name { get; set; }
-            [Index(1)]
-            public int Id { get; set; }
-        }
         static void Main(string[] args)
         {
+            
             using (var reader = new StreamReader("input.txt"))
             using (var csv = new CsvReader(reader))
             {
@@ -64,17 +57,22 @@ namespace ConsoleApp1
                 new config {Name = "Something", Id = 1},
                 new config {Name = "Something else", Id = 2},
             };
-
+            
             Thread myThread = new Thread(new ThreadStart(threadFun));
 
             myThread.Start();
+            
 
-            //Console.Write("Hello World");
 
             while (true)
             {
-                Thread.Sleep(5000);
-                Console.Write("Ovde ce biti ispis\n");
+                Console.Write("Press ESC to exit...\n");
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true); //true here mean we won't output the key to the console, just cleaner in my opinion.
+                if (keyInfo.Key == ConsoleKey.Escape)
+                {                  
+                    Environment.Exit(0);
+                }
+              
             }
         }
     }
