@@ -6,11 +6,17 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace ConsoleApp1
 {
+    
     class Program
-    { 
+    {
+        public static int flag = 0;
+
+        private static System.Timers.Timer interruptGenerator; //timer za merenje kada treba da ispisuje
+
         // ovo ce biti funkcija za ispisivanje trenutnih stanja promenljivih koje ce cuvati podatke sa adama
         public static void interruptHandler(List<config> objList)
         {
@@ -25,13 +31,14 @@ namespace ConsoleApp1
         // thread koji za sad pali interruptHandler samo kad mu se posalje 1 iz konzole, kad budemo primali podatke sa adama to ce mu biti interrupt
         public static void threadFun(List<config> objList)
         {
+            SetTimer();
             while (true)
             {
-                var ch = Console.Read();
-                if (ch == '1')
+                if (flag == 1)
                 {
                     objList.Add(new config("Something",10000));
                     interruptHandler(objList);
+                    flag = 0;
                 }
             }
         }
@@ -65,6 +72,20 @@ namespace ConsoleApp1
                 }
               
             }
+        }
+
+        private static void SetTimer()                                              // Za sad radi na 3 sekunde dize flag na 1 i ulazi u ispis i tako u krug
+        {
+            interruptGenerator = new System.Timers.Timer(3000);
+            interruptGenerator.Elapsed += OnSignal;
+            interruptGenerator.AutoReset = true;
+            interruptGenerator.Enabled = true;
+        }
+
+        private static void OnSignal(Object source, ElapsedEventArgs e)
+        {
+            Console.WriteLine("Entered timer...");
+            flag = 1;
         }
     }
 }
