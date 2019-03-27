@@ -10,34 +10,28 @@ using System.Threading.Tasks;
 namespace ConsoleApp1
 {
     class Program
-    {
-        // Globalna lista izlaznih podataka, da bi se videla u thraed-u
-        public class globals
-        {
-
-            public static List<config> outputs;
-
-        }
+    { 
         // ovo ce biti funkcija za ispisivanje trenutnih stanja promenljivih koje ce cuvati podatke sa adama
-        public static void interruptHandler()
+        public static void interruptHandler(List<config> objList)
         {
             Console.Write("Usao u interrupt\n");
             using (var writer = new StreamWriter("output.csv"))         //output.csv kada mu ne definisemo putanju se po default-u nalazi u debug folderu 
             using (var csv = new CsvWriter(writer))
             {
-                csv.WriteRecords(globals.outputs);
+                csv.WriteRecords(objList);
             }
         }
 
         // thread koji za sad pali interruptHandler samo kad mu se posalje 1 iz konzole, kad budemo primali podatke sa adama to ce mu biti interrupt
-        public static void threadFun()
+        public static void threadFun(List<config> objList)
         {
             while (true)
             {
                 var ch = Console.Read();
                 if (ch == '1')
                 {
-                    interruptHandler();
+                    objList.Add(new config("Something",10000));
+                    interruptHandler(objList);
                 }
             }
         }
@@ -52,13 +46,10 @@ namespace ConsoleApp1
 
             }
 
-            globals.outputs = new List<config>
-            {
-                new config {Name = "Something", Id = 1},
-                new config {Name = "Something else", Id = 2},
-            };
+            List<config> objList = new List<config>();
             
-            Thread myThread = new Thread(new ThreadStart(threadFun));
+
+            Thread myThread = new Thread(() => threadFun(objList));
 
             myThread.Start();
             

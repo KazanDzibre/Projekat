@@ -13,5 +13,10 @@ namespace ConsoleApp1
         public string Name { get; set; }
         [Index(1)]
         public int Id { get; set; }
+
+        public config(string Name, int Id) {
+            this.Name = Name;
+            this.Id = Id;
+        }
     }
 }
