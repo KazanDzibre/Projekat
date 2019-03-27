@@ -1,2 +1,2 @@
-Name,Adress
-Adam,10520
+Name,Id
+Adam,3

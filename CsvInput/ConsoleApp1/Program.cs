@@ -14,6 +14,7 @@ namespace ConsoleApp1
     class Program
     {
         public static int flag = 0;
+        public static int time = 0;
 
         private static System.Timers.Timer interruptGenerator; //timer za merenje kada treba da ispisuje
 
@@ -44,19 +45,19 @@ namespace ConsoleApp1
         }
         static void Main(string[] args)
         {
-            
+            List<config> objListOut = new List<config>();
+            List<config> objListIn = new List<config>();
+
             using (var reader = new StreamReader("input.txt"))
             using (var csv = new CsvReader(reader))
             {
                 //csv.Configuration.PrepareHeaderForMatch = (string header, int index) => header.ToLower();  //Ovo za slucaj da ne odgovara header opisu
                 var records = csv.GetRecords<config>();
-
+                objListIn = records.ToList();
             }
+            time = objListIn[0].Id;             // Koristio uneseno vreme iz konfiguracije
 
-            List<config> objList = new List<config>();
-            
-
-            Thread myThread = new Thread(() => threadFun(objList));
+            Thread myThread = new Thread(() => threadFun(objListOut));
 
             myThread.Start();
             
@@ -76,7 +77,7 @@ namespace ConsoleApp1
 
         private static void SetTimer()                                              // Za sad radi na 3 sekunde dize flag na 1 i ulazi u ispis i tako u krug
         {
-            interruptGenerator = new System.Timers.Timer(3000);
+            interruptGenerator = new System.Timers.Timer(time * 1000);
             interruptGenerator.Elapsed += OnSignal;
             interruptGenerator.AutoReset = true;
             interruptGenerator.Enabled = true;
