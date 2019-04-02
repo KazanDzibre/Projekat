@@ -28,6 +28,8 @@ namespace ServerApp
             }
             int time = objListIn[0].Id;
 
+            AdamCNT AdamComponent = new AdamCNT();
+
             setTimer(time);
             Console.Write("Press ESC to exit...\n");
             ConsoleKeyInfo keyInfo = Console.ReadKey(true);
@@ -47,7 +49,7 @@ namespace ServerApp
         {            
             Console.WriteLine("Entered timer... ");
             objListOut.Add(new config("Something", 10000));
-            using (var writer = new StreamWriter("output.csv"))          
+            using (var writer = new StreamWriter("output2.csv"))          
             using (var csv = new CsvWriter(writer))
             {
                 csv.WriteRecords(objListOut);
