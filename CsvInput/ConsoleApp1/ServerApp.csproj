@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdamCNT.cs" />
+    <Compile Include="AdamComponent.cs" />
     <Compile Include="config.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Program.cs" />

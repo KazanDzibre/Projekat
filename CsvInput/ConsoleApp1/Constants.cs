@@ -11,6 +11,6 @@ namespace ServerApp
     {
         public static string DEF_IP = "192.168.0.14";
 
-        public static int DEF_PORT = 5168;
+        public static int DEF_PORT = 502;
     }
 }

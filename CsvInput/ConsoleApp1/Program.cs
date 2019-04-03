@@ -11,10 +11,11 @@ namespace ServerApp
 
     class Program
     {
-
         private static System.Timers.Timer interruptGenerator;
 
         public static List<config> objListOut = new List<config>();
+
+        private static AdamCNT AdamComponent;
 
         static void Main(string[] args)
         {
@@ -28,7 +29,22 @@ namespace ServerApp
             }
             int time = objListIn[0].Id;
 
-            AdamCNT AdamComponent = new AdamCNT();
+            AdamComponent = new AdamCNT();
+
+
+            if (AdamComponent.createSocket())
+            {
+                Console.WriteLine("Socket connected successfuly...");
+            }
+            else
+            {
+                Console.WriteLine("Connecting socket failed...");
+            }
+
+            AdamComponent.resetCounter();
+
+            AdamComponent.counterStart();
+
 
             setTimer(time);
             Console.Write("Press ESC to exit...\n");
@@ -46,7 +62,8 @@ namespace ServerApp
             interruptGenerator.Enabled = true;
         }
         private static void OnSignal(Object source, ElapsedEventArgs e)
-        {            
+        {
+            AdamComponent.counterRead();
             Console.WriteLine("Entered timer... ");
             objListOut.Add(new config("Something", 10000));
             using (var writer = new StreamWriter("output2.csv"))          
