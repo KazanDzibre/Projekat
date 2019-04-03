@@ -41,8 +41,6 @@ namespace ServerApp
                 Console.WriteLine("Connecting socket failed...");
             }
 
-            AdamComponent.resetCounter();
-
             AdamComponent.counterStart();
 
 
@@ -51,6 +49,7 @@ namespace ServerApp
             ConsoleKeyInfo keyInfo = Console.ReadKey(true);
             if (keyInfo.Key == ConsoleKey.Escape)
             {
+                AdamComponent.resetCounter();
                 Environment.Exit(0);
             }
         }

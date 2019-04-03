@@ -91,7 +91,19 @@ namespace ServerApp
 
         public void resetCounter()
         {
-            /*TO DO*/   
+            int iStart;             // base address
+            int iConfigStart;       // index ulaznog kanala pa se po formuli dobije adresa
+
+            iConfigStart = Counter.GetChannelStart(m_Adam6000Type);
+            iStart = 32 + (iConfigStart + 0) * 4 + 2;       // + 0 za prvi kanal prakticno nema smisla al cisto da se vidi da se tu dodaje u zavisnosti od kanala
+            if (m_adamModbus.Modbus().ForceSingleCoil(iStart, 1))
+            {
+                Console.WriteLine("Counter enabled...");
+            }
+            else
+            {
+                Console.WriteLine("ForceSingleCoil() failed...");
+            }
         }
     }
 }
