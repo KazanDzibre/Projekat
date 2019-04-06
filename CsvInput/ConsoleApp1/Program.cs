@@ -59,8 +59,8 @@ namespace ServerApp
         {
             AdamComponent.counterRead();
             Console.WriteLine("Entered timer... ");
-            objListOut.Add(new outputForm(AdamComponent.getCnt(), "OFF")); //napravi geter za cnt
-            using (var writer = new StreamWriter("output2.csv"))          
+            objListOut.Add(new outputForm(AdamComponent.getCnt(), "OFF"));
+            using (var writer = new StreamWriter("output.csv"))          
             using (var csv = new CsvWriter(writer))
             {
                 csv.WriteRecords(objListOut);
