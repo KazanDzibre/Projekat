@@ -68,6 +68,7 @@
     <Compile Include="AdamComponent.cs" />
     <Compile Include="config.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="outputForm.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

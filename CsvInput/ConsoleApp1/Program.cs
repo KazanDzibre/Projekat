@@ -13,7 +13,7 @@ namespace ServerApp
     {
         private static System.Timers.Timer interruptGenerator;
 
-        public static List<config> objListOut = new List<config>();
+        public static List<outputForm> objListOut = new List<outputForm>();
 
         private static AdamCNT AdamComponent;
 
@@ -27,19 +27,14 @@ namespace ServerApp
                 var records = csv.GetRecords<config>();
                 objListIn = records.ToList();
             }
-            int time = objListIn[0].Id;
+            int time = objListIn[0].Time;
+            Constants.DEF_IP = objListIn[0].Ip;
 
             AdamComponent = new AdamCNT();
 
 
-            if (AdamComponent.createSocket())
-            {
-                Console.WriteLine("Socket connected successfuly...");
-            }
-            else
-            {
-                Console.WriteLine("Connecting socket failed...");
-            }
+            AdamComponent.createCounterSocket();
+            AdamComponent.createSwitchSocket();
 
             AdamComponent.counterStart();
 
@@ -64,7 +59,7 @@ namespace ServerApp
         {
             AdamComponent.counterRead();
             Console.WriteLine("Entered timer... ");
-            objListOut.Add(new config("Something", 10000));
+            objListOut.Add(new outputForm(AdamComponent.getCnt(), "OFF")); //napravi geter za cnt
             using (var writer = new StreamWriter("output2.csv"))          
             using (var csv = new CsvWriter(writer))
             {

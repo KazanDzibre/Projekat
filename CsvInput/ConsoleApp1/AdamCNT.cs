@@ -14,9 +14,11 @@ namespace ServerApp
     public class AdamCNT
     {
         private AdamSocket m_adamModbus;
+        private AdamSocket m_adamUDP;
         private string m_szIP;
         private int m_iPort;
         private int m_iCount;
+        private double cnt;
         private int m_iDoTotal, m_iDiTotal, m_iCntTotal;
         private Adam6000Type m_Adam6000Type;
         private byte[] m_byMode;
@@ -24,11 +26,12 @@ namespace ServerApp
 
         public AdamCNT()
         {
-            
 
+            cnt = 0;
             m_szIP = Constants.DEF_IP;
             m_iPort = Constants.DEF_PORT;
             m_adamModbus = new AdamSocket();
+            m_adamUDP = new AdamSocket();
             m_adamModbus.SetTimeout(1000, 1000, 1000);  // set timeout for TCP
             m_Adam6000Type = Adam6000Type.Adam6051; // the sample is for ADAM-6051
 
@@ -46,19 +49,18 @@ namespace ServerApp
         }
 
 
-        public bool createSocket()
+        public void createCounterSocket()
         {
             if (m_adamModbus.Connect(Constants.DEF_IP, ProtocolType.Tcp, Constants.DEF_PORT))
             {
-                return true;
+                Console.WriteLine("TCP socket connected successfuly...");
             }
             else
             {
-                return false;
+                Console.WriteLine("Connecting TCP socket failed...");
             }
 
         }
-
         public void counterStart()
         {
             int iStart;             // base address
@@ -80,12 +82,11 @@ namespace ServerApp
             int iCntStart = 25, iChTotal = 1;
 
             int[] iData;
-            double fvalue;
 
             if (m_adamModbus.Modbus().ReadInputRegs(iCntStart, iChTotal * 2, out iData))
             {
-                fvalue = Counter.GetScaledValue(m_Adam6000Type, 1, iData[1], iData[0]);
-                Console.WriteLine(fvalue.ToString(Counter.GetFormat(m_Adam6000Type, m_byMode[0])) + " " + Counter.GetUnitName(m_Adam6000Type, m_byMode[0]));
+                cnt = Counter.GetScaledValue(m_Adam6000Type, 1, iData[1], iData[0]);
+                Console.WriteLine(cnt.ToString(Counter.GetFormat(m_Adam6000Type, m_byMode[0])) + " " + Counter.GetUnitName(m_Adam6000Type, m_byMode[0]));
             }
         }
 
@@ -104,6 +105,28 @@ namespace ServerApp
             {
                 Console.WriteLine("ForceSingleCoil() failed...");
             }
+        }
+
+        public double getCnt()
+        {
+            return cnt;
+        }
+
+        public void createSwitchSocket()
+        {
+            if (m_adamUDP.Connect(AdamType.Adam6000, Constants.DEF_IP, ProtocolType.Udp))
+            {
+                Console.WriteLine("UDP socket connected successfuly...");
+            }
+            else
+            {
+                Console.WriteLine("Connecting UDP socket failed...");
+            }
+        }
+
+        public void switchStart()
+        {
+            /*TO DO*/
         }
     }
 }

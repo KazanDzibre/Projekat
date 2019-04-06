@@ -9,8 +9,9 @@ namespace ServerApp
 {
     static class Constants
     {
-        public static string DEF_IP = "192.168.0.14";
+        public static string DEF_IP;
 
         public static int DEF_PORT = 502;
+
     }
 }

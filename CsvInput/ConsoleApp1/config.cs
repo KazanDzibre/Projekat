@@ -12,11 +12,14 @@ namespace ServerApp
         [Index(0)]
         public string Name { get; set; }
         [Index(1)]
-        public int Id { get; set; }
-
-        public config(string Name, int Id) {
+        public int Time { get; set; }
+        [Index(2)]
+        public string Ip { get; set; }
+        
+        public config(string Name, int Time, string Ip) {
             this.Name = Name;
-            this.Id = Id;
+            this.Time = Time;
+            this.Ip = Ip;
         }
     }
 }
