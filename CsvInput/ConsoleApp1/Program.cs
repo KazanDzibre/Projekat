@@ -34,7 +34,7 @@ namespace ServerApp
 
 
             AdamComponent.createCounterSocket();
-            AdamComponent.createSwitchSocket();
+            AdamComponent.createButtonSocket();
 
             AdamComponent.counterStart();
 
@@ -58,8 +58,9 @@ namespace ServerApp
         private static void OnSignal(Object source, ElapsedEventArgs e)
         {
             AdamComponent.counterRead();
+            AdamComponent.buttonRead();
             Console.WriteLine("Entered timer... ");
-            objListOut.Add(new outputForm(AdamComponent.getCnt(), "OFF"));
+            objListOut.Add(new outputForm(AdamComponent.getCnt(),AdamComponent.getSwitchState()));
             using (var writer = new StreamWriter("output.csv"))          
             using (var csv = new CsvWriter(writer))
             {

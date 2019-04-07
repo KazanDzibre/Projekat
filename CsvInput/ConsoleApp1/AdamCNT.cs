@@ -19,6 +19,7 @@ namespace ServerApp
         private int m_iPort;
         private int m_iCount;
         private double cnt;
+        private string switchState;
         private int m_iDoTotal, m_iDiTotal, m_iCntTotal;
         private Adam6000Type m_Adam6000Type;
         private byte[] m_byMode;
@@ -112,7 +113,11 @@ namespace ServerApp
             return cnt;
         }
 
-        public void createSwitchSocket()
+        public string getSwitchState()
+        {
+            return switchState;
+        }
+        public void createButtonSocket()
         {
             if (m_adamUDP.Connect(AdamType.Adam6000, Constants.DEF_IP, ProtocolType.Udp))
             {
@@ -121,12 +126,43 @@ namespace ServerApp
             else
             {
                 Console.WriteLine("Connecting UDP socket failed...");
+
             }
         }
 
-        public void switchStart()
+        public void buttonRead()
         {
-            /*TO DO*/
+
+
+
+            int iDiStart = 1;
+
+            int iConfigStart;
+            bool[] bDiData;
+            int iChTotal = 2;
+            string dataButton;
+            int iStart;
+
+            iConfigStart = Counter.GetChannelStart(m_Adam6000Type);
+            iStart = 17 + 6 - 12;
+            if (m_adamModbus.Modbus().ReadCoilStatus(iDiStart, 12, out bDiData))
+            {
+                dataButton = bDiData[6].ToString();
+                if (dataButton == "True")
+                {
+                    Console.WriteLine("Button OFF");
+                    switchState = "OFF";
+                }
+                else
+                {
+                    Console.WriteLine("Button ON");
+                    switchState = "ON";
+                }
+            }
+            else
+            {
+                Console.WriteLine("Failed to read status...");
+            }
         }
     }
 }
