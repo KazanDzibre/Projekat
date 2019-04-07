@@ -17,10 +17,9 @@ namespace ServerApp
         private AdamSocket m_adamUDP;
         private string m_szIP;
         private int m_iPort;
-        private int m_iCount;
         private double cnt;
         private string switchState;
-        private int m_iDoTotal, m_iDiTotal, m_iCntTotal;
+        private int m_iCntTotal;
         private Adam6000Type m_Adam6000Type;
         private byte[] m_byMode;
         private bool[] m_bRecordLastCount;
@@ -41,14 +40,10 @@ namespace ServerApp
 
         protected void InitAdam6051()
         {
-
-            m_iDiTotal = 12;
-            m_iDoTotal = 6;
             m_iCntTotal = Counter.GetChannelTotal(Adam6000Type.Adam6051);
             m_byMode = new byte[m_iCntTotal];
             m_bRecordLastCount = new bool[m_iCntTotal];
         }
-
 
         public void createCounterSocket()
         {
@@ -60,8 +55,8 @@ namespace ServerApp
             {
                 Console.WriteLine("Connecting TCP socket failed...");
             }
-
         }
+
         public void counterStart()
         {
             int iStart;             // base address
@@ -93,14 +88,14 @@ namespace ServerApp
 
         public void resetCounter()
         {
-            int iStart;             // base address
-            int iConfigStart;       // index ulaznog kanala pa se po formuli dobije adresa
+            int iStart;             
+            int iConfigStart;      
 
             iConfigStart = Counter.GetChannelStart(m_Adam6000Type);
-            iStart = 32 + (iConfigStart + 0) * 4 + 2;       // + 0 za prvi kanal prakticno nema smisla al cisto da se vidi da se tu dodaje u zavisnosti od kanala
+            iStart = 32 + (iConfigStart + 0) * 4 + 2;       // + 0 za prvi kanal prakticno nema smisla al cisto da se vidi da se tu dodaje u zavisnosti od kanala, +2 na kraju da gadja tu adresu za reset valjda
             if (m_adamModbus.Modbus().ForceSingleCoil(iStart, 1))
             {
-                Console.WriteLine("Counter enabled...");
+                Console.WriteLine("Counter reset...");
             }
             else
             {
@@ -108,16 +103,7 @@ namespace ServerApp
             }
         }
 
-        public double getCnt()
-        {
-            return cnt;
-        }
-
-        public string getSwitchState()
-        {
-            return switchState;
-        }
-        public void createButtonSocket()
+        public void createSwitchSocket()
         {
             if (m_adamUDP.Connect(AdamType.Adam6000, Constants.DEF_IP, ProtocolType.Udp))
             {
@@ -130,21 +116,13 @@ namespace ServerApp
             }
         }
 
-        public void buttonRead()
+        /* Citanje sa switcha*/
+        public void switchRead()
         {
-
-
-
             int iDiStart = 1;
-
-            int iConfigStart;
             bool[] bDiData;
-            int iChTotal = 2;
             string dataButton;
-            int iStart;
 
-            iConfigStart = Counter.GetChannelStart(m_Adam6000Type);
-            iStart = 17 + 6 - 12;
             if (m_adamModbus.Modbus().ReadCoilStatus(iDiStart, 12, out bDiData))
             {
                 dataButton = bDiData[6].ToString();
@@ -163,6 +141,17 @@ namespace ServerApp
             {
                 Console.WriteLine("Failed to read status...");
             }
+        }
+
+        /* Geteri za polja cnt i switchstate*/
+        public double getCnt()
+        {
+            return cnt;
+        }
+
+        public string getSwitchState()
+        {
+            return switchState;
         }
     }
 }

@@ -13,7 +13,7 @@ namespace ServerApp
     {
         private static System.Timers.Timer interruptGenerator;
 
-        public static List<outputForm> objListOut = new List<outputForm>();
+        private static List<outputForm> objListOut = new List<outputForm>();
 
         private static AdamCNT AdamComponent;
 
@@ -21,7 +21,7 @@ namespace ServerApp
         {
             List<config> objListIn = new List<config>();
 
-            using (var reader = new StreamReader("input.txt"))
+            using (var reader = new StreamReader("..\\..\\..\\input.txt"))
             using (var csv = new CsvReader(reader))
             {
                 var records = csv.GetRecords<config>();
@@ -34,7 +34,7 @@ namespace ServerApp
 
 
             AdamComponent.createCounterSocket();
-            AdamComponent.createButtonSocket();
+            AdamComponent.createSwitchSocket();
 
             AdamComponent.counterStart();
 
@@ -58,10 +58,10 @@ namespace ServerApp
         private static void OnSignal(Object source, ElapsedEventArgs e)
         {
             AdamComponent.counterRead();
-            AdamComponent.buttonRead();
+            AdamComponent.switchRead();
             Console.WriteLine("Entered timer... ");
             objListOut.Add(new outputForm(AdamComponent.getCnt(),AdamComponent.getSwitchState()));
-            using (var writer = new StreamWriter("output.csv"))          
+            using (var writer = new StreamWriter("..\\..\\..\\statistics.csv"))          
             using (var csv = new CsvWriter(writer))
             {
                 csv.WriteRecords(objListOut);
