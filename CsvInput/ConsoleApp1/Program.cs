@@ -21,7 +21,7 @@ namespace ServerApp
         {
             List<config> objListIn = new List<config>();
 
-            using (var reader = new StreamReader("..\\..\\..\\input.txt"))
+            using (var reader = new StreamReader("input.txt"))
             using (var csv = new CsvReader(reader))
             {
                 var records = csv.GetRecords<config>();
@@ -56,12 +56,14 @@ namespace ServerApp
             interruptGenerator.Enabled = true;
         }
         private static void OnSignal(Object source, ElapsedEventArgs e)
-        {
-            AdamComponent.counterRead();
+        { 
             AdamComponent.switchRead();
+            AdamComponent.counterRead();
             Console.WriteLine("Entered timer... ");
+            Console.WriteLine("######################");
+
             objListOut.Add(new outputForm(AdamComponent.getCnt(),AdamComponent.getSwitchState()));
-            using (var writer = new StreamWriter("..\\..\\..\\statistics.csv"))          
+            using (var writer = new StreamWriter("statistics.csv"))          
             using (var csv = new CsvWriter(writer))
             {
                 csv.WriteRecords(objListOut);

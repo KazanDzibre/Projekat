@@ -20,9 +20,9 @@ namespace ServerApp
         private double cnt;
         private string switchState;
         private int m_iCntTotal;
+        private int cnt_enable;
         private Adam6000Type m_Adam6000Type;
-        private byte[] m_byMode;
-        private bool[] m_bRecordLastCount;
+
 
         public AdamCNT()
         {
@@ -34,6 +34,7 @@ namespace ServerApp
             m_adamUDP = new AdamSocket();
             m_adamModbus.SetTimeout(1000, 1000, 1000);  // set timeout for TCP
             m_Adam6000Type = Adam6000Type.Adam6051; // the sample is for ADAM-6051
+            cnt_enable = 0;
 
             InitAdam6051();
         }
@@ -41,8 +42,6 @@ namespace ServerApp
         protected void InitAdam6051()
         {
             m_iCntTotal = Counter.GetChannelTotal(Adam6000Type.Adam6051);
-            m_byMode = new byte[m_iCntTotal];
-            m_bRecordLastCount = new bool[m_iCntTotal];
         }
 
         public void createCounterSocket()
@@ -54,6 +53,7 @@ namespace ServerApp
             else
             {
                 Console.WriteLine("Connecting TCP socket failed...");
+                Environment.Exit(0);
             }
         }
 
@@ -64,7 +64,7 @@ namespace ServerApp
 
             iConfigStart = Counter.GetChannelStart(m_Adam6000Type);
             iStart = 32 + (iConfigStart + 0) * 4 + 1;       // + 0 za prvi kanal prakticno nema smisla al cisto da se vidi da se tu dodaje u zavisnosti od kanala
-            if (m_adamModbus.Modbus().ForceSingleCoil(iStart, 1))
+            if (m_adamModbus.Modbus().ForceSingleCoil(iStart, cnt_enable))
             {
                 Console.WriteLine("Counter enabled...");
             }
@@ -82,14 +82,14 @@ namespace ServerApp
             if (m_adamModbus.Modbus().ReadInputRegs(iCntStart, iChTotal * 2, out iData))
             {
                 cnt = Counter.GetScaledValue(m_Adam6000Type, 1, iData[1], iData[0]);
-                Console.WriteLine(cnt.ToString(Counter.GetFormat(m_Adam6000Type, m_byMode[0])) + " " + Counter.GetUnitName(m_Adam6000Type, m_byMode[0]));
+                Console.WriteLine(cnt.ToString(Counter.GetFormat(m_Adam6000Type, 1)) + " " + Counter.GetUnitName(m_Adam6000Type, 1));
             }
         }
 
         public void resetCounter()
         {
-            int iStart;             
-            int iConfigStart;      
+            int iStart;
+            int iConfigStart;
 
             iConfigStart = Counter.GetChannelStart(m_Adam6000Type);
             iStart = 32 + (iConfigStart + 0) * 4 + 2;       // + 0 za prvi kanal prakticno nema smisla al cisto da se vidi da se tu dodaje u zavisnosti od kanala, +2 na kraju da gadja tu adresu za reset valjda
@@ -112,6 +112,7 @@ namespace ServerApp
             else
             {
                 Console.WriteLine("Connecting UDP socket failed...");
+                Environment.Exit(0);
 
             }
         }
@@ -119,6 +120,7 @@ namespace ServerApp
         /* Citanje sa switcha*/
         public void switchRead()
         {
+
             int iDiStart = 1;
             bool[] bDiData;
             string dataButton;
@@ -128,13 +130,19 @@ namespace ServerApp
                 dataButton = bDiData[6].ToString();
                 if (dataButton == "True")
                 {
+                    Console.WriteLine("######################");
                     Console.WriteLine("Button OFF");
                     switchState = "OFF";
+                    cnt_enable = 0;
+                    counterStart();
                 }
                 else
                 {
+                    Console.WriteLine("######################");
                     Console.WriteLine("Button ON");
                     switchState = "ON";
+                    cnt_enable = 1;
+                    counterStart();
                 }
             }
             else
