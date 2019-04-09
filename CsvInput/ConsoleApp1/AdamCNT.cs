@@ -14,6 +14,7 @@ namespace ServerApp
     public class AdamCNT
     {
         private double cnt;
+        private double cnt_last;
         private string switchState;
         private AdamSocket m_adamModbus;
         private AdamSocket m_adamUDP;
@@ -23,11 +24,13 @@ namespace ServerApp
         private int cnt_enable;
         private Adam6000Type m_Adam6000Type;
 
+        private static List<CntOutput> cntListOut = new List<CntOutput>();
 
         public AdamCNT()
         {
 
             cnt = 0;
+            cnt_last = 0;
             m_szIP = Constants.DEF_IP;
             m_iPort = Constants.DEF_PORT;
             m_adamModbus = new AdamSocket();
@@ -64,11 +67,7 @@ namespace ServerApp
 
             iConfigStart = Counter.GetChannelStart(m_Adam6000Type);
             iStart = 32 + (iConfigStart + 0) * 4 + 1;       // + 0 za prvi kanal prakticno nema smisla al cisto da se vidi da se tu dodaje u zavisnosti od kanala
-            if (m_adamModbus.Modbus().ForceSingleCoil(iStart, cnt_enable))
-            {
-                Console.WriteLine("Counter enabled...");
-            }
-            else
+            if (!m_adamModbus.Modbus().ForceSingleCoil(iStart, cnt_enable))
             {
                 Console.WriteLine("ForceSingleCoil() failed...");
             }
@@ -82,7 +81,11 @@ namespace ServerApp
             if (m_adamModbus.Modbus().ReadInputRegs(iCntStart, iChTotal * 2, out iData))
             {
                 cnt = Counter.GetScaledValue(m_Adam6000Type, 1, iData[1], iData[0]);
-                Console.WriteLine(cnt.ToString(Counter.GetFormat(m_Adam6000Type, 1)) + " " + Counter.GetUnitName(m_Adam6000Type, 1));
+                if (cnt_last != cnt)
+                {
+                    FileIO.outputCnt(cntListOut,cnt);
+                    cnt_last = cnt;
+                }
             }
         }
 
@@ -118,7 +121,7 @@ namespace ServerApp
         }
 
         /* Citanje sa switcha*/
-        public void switchRead()
+        public int switchRead()
         {
 
             int iDiStart = 1;
@@ -130,24 +133,29 @@ namespace ServerApp
                 dataButton = bDiData[6].ToString();
                 if (dataButton == "True")
                 {
-                    Console.WriteLine("######################");
-                    Console.WriteLine("Button OFF");
-                    switchState = "OFF";
-                    cnt_enable = 0;
-                    counterStart();
+                    switchState = "OFF";  
+                    if (cnt_enable != 0)
+                    {
+                        cnt_enable = 0;
+                        counterStart();
+                    }
+                    return 0;
                 }
                 else
                 {
-                    Console.WriteLine("######################");
-                    Console.WriteLine("Button ON");
-                    switchState = "ON";
-                    cnt_enable = 1;
-                    counterStart();
+                    switchState = "ON";             
+                    if (cnt_enable != 1)
+                    {
+                        cnt_enable = 1;
+                        counterStart();
+                    }
+                    return 1;
                 }
             }
             else
             {
                 Console.WriteLine("Failed to read status...");
+                return 69;                                          //kod greske
             }
         }
 

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Timers;
 
 namespace ServerApp
@@ -22,6 +23,8 @@ namespace ServerApp
         static void Main(string[] args)
         {
 
+            Thread myThread = new Thread(() => ThreadFunctions.threadFun(AdamComponent));
+
             FileIO.inputFun();
 
             /*      Ucitavanje input fajla      */
@@ -35,16 +38,16 @@ namespace ServerApp
             AdamComponent.createSwitchSocket();
 
             AdamComponent.counterStart();
-            
+
+            myThread.Start();
+
             setTimer(time);
             Console.Write("Press ESC to exit...\n");
-
-            AdamComponent.switchRead();
-            AdamComponent.counterRead();
 
             ConsoleKeyInfo keyInfo = Console.ReadKey(true);
             if (keyInfo.Key == ConsoleKey.Escape)
             {
+                myThread.Abort();
                 AdamComponent.resetCounter();
                 Environment.Exit(0);
             }
@@ -59,10 +62,12 @@ namespace ServerApp
         }
         private static void OnSignal(Object source, ElapsedEventArgs e)
         {
-            AdamComponent.switchRead();
-            AdamComponent.counterRead();
             Console.WriteLine("Entered timer... ");
             Console.WriteLine("######################");
+            Console.WriteLine("Count: " + AdamComponent.getCnt());
+            Console.WriteLine("State: " + AdamComponent.getSwitchState());
+            Console.WriteLine("######################");
+
             FileIO.outputFunTimer(objListOut,AdamComponent);
            
         }

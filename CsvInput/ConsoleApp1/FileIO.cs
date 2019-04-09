@@ -37,5 +37,25 @@ namespace ServerApp
                 csv.WriteRecords(objListOut);
             }
         }
+
+        public static void outputSwitch(List<SwitchOutput> objListOutSwitch, SwitchOutput Switch)
+        {
+            objListOutSwitch.Add(new SwitchOutput("Prekidac 1", Switch.Time_start, Switch.Time_end, Switch.State));
+            using (var writer = new StreamWriter("SwitchOutput.csv"))
+            using (var csv = new CsvWriter(writer))
+            {
+                csv.WriteRecords(objListOutSwitch);
+            }
+        }
+
+        public static void outputCnt(List<CntOutput> cntOutList, double Cnt)
+        {
+            cntOutList.Add(new CntOutput(Cnt));
+            using (var writer = new StreamWriter("CounterOutput.csv"))
+            using (var csv = new CsvWriter(writer))
+            {
+                csv.WriteRecords(cntOutList);
+            }
+        }
     }
 }
