@@ -13,12 +13,12 @@ namespace ServerApp
 {
     public class AdamCNT
     {
+        private double cnt;
+        private string switchState;
         private AdamSocket m_adamModbus;
         private AdamSocket m_adamUDP;
         private string m_szIP;
         private int m_iPort;
-        private double cnt;
-        private string switchState;
         private int m_iCntTotal;
         private int cnt_enable;
         private Adam6000Type m_Adam6000Type;

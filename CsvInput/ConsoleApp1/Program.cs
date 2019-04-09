@@ -17,30 +17,31 @@ namespace ServerApp
 
         private static AdamCNT AdamComponent;
 
+      
+
         static void Main(string[] args)
         {
-            List<config> objListIn = new List<config>();
 
-            using (var reader = new StreamReader("input.txt"))
-            using (var csv = new CsvReader(reader))
-            {
-                var records = csv.GetRecords<config>();
-                objListIn = records.ToList();
-            }
-            int time = objListIn[0].Time;
-            Constants.DEF_IP = objListIn[0].Ip;
+            FileIO.inputFun();
+
+            /*      Ucitavanje input fajla      */
+            int time = FileIO.objListIn[0].Time;
+            Constants.DEF_IP = FileIO.objListIn[0].Ip;
 
             AdamComponent = new AdamCNT();
 
-
+            /*      Kreiranje socketa       */
             AdamComponent.createCounterSocket();
             AdamComponent.createSwitchSocket();
 
             AdamComponent.counterStart();
-
-
+            
             setTimer(time);
             Console.Write("Press ESC to exit...\n");
+
+            AdamComponent.switchRead();
+            AdamComponent.counterRead();
+
             ConsoleKeyInfo keyInfo = Console.ReadKey(true);
             if (keyInfo.Key == ConsoleKey.Escape)
             {
@@ -54,20 +55,16 @@ namespace ServerApp
             interruptGenerator.Elapsed += OnSignal;
             interruptGenerator.AutoReset = true;
             interruptGenerator.Enabled = true;
+           
         }
         private static void OnSignal(Object source, ElapsedEventArgs e)
-        { 
+        {
             AdamComponent.switchRead();
             AdamComponent.counterRead();
             Console.WriteLine("Entered timer... ");
             Console.WriteLine("######################");
-
-            objListOut.Add(new outputForm(AdamComponent.getCnt(),AdamComponent.getSwitchState()));
-            using (var writer = new StreamWriter("statistics.csv"))          
-            using (var csv = new CsvWriter(writer))
-            {
-                csv.WriteRecords(objListOut);
-            }
+            FileIO.outputFunTimer(objListOut,AdamComponent);
+           
         }
     }
 }
