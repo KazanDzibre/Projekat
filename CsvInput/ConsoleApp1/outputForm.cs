@@ -28,7 +28,7 @@ namespace ServerApp
 
         public outputForm(double counter_value, string switcher_value)
         {
-            time = DateTime.Now.ToString("H:mm:ss:fff");
+            time = DateTime.Now.ToString("H:mm:ss.fff");
             this.counter_value = counter_value;
             this.switcher_value = switcher_value;
         }
