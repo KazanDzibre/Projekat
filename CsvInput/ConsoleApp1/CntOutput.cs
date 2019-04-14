@@ -32,7 +32,7 @@ namespace ServerApp
         public CntOutput(double cnt_value)
         {
             Name = "Brojac 1";
-            Time = DateTime.Now.ToString("H:mm:ss.fff");
+            Time = DateTime.Now.ToString("H:mm:ss:fff");
             this.cnt_value = cnt_value;
         }
     }

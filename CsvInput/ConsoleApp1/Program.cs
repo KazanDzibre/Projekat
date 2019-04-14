@@ -47,6 +47,18 @@ namespace ServerApp
             ConsoleKeyInfo keyInfo = Console.ReadKey(true);
             if (keyInfo.Key == ConsoleKey.Escape)
             {
+                SwitchOutput Switch_end = new SwitchOutput();
+                if (AdamComponent.getSwitchState() == "ON")
+                {
+                    Switch_end.Time_start = ThreadFunctions.Switch_on.Time_start;
+                }
+                else
+                {
+                    Switch_end.Time_start = ThreadFunctions.Switch_off.Time_start;
+                }
+                Switch_end.State = AdamComponent.getSwitchState();
+                Switch_end.Time_end = DateTime.Now.ToString("H:mm:ss:fff");
+                FileIO.outputSwitch(ThreadFunctions.switchOutList,Switch_end);
                 myThread.Abort();
                 AdamComponent.resetCounter();
                 Environment.Exit(0);
